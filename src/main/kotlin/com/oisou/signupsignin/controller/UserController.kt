@@ -26,12 +26,12 @@ class UserController constructor(private val userService: UserService) {
     }
 
     @PutMapping("/{userId}")
-    fun updateUserById(@PathVariable userId: Long, @RequestBody user: User):ResponseEntity<User>{
-        return ResponseEntity(userService.updateUser(user),HttpStatus.OK)
+    fun updateUserById(@PathVariable userId: Long, @RequestBody user: User): ResponseEntity<User> {
+        return ResponseEntity(userService.updateUser(user), HttpStatus.OK)
     }
 
     @DeleteMapping("/{userId}")
-    fun deleteUserById(@PathVariable userId: Long){
+    fun deleteUserById(@PathVariable userId: Long) {
         userService.deleteUserById(userId)
     }
 }

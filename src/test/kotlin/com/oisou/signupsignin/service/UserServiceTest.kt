@@ -30,34 +30,33 @@ class UserServiceTest {
 
     @Test
     fun `when finding user by id return user`() {
-        //WHEN
+        // WHEN
         val user = userService.findUserByID(111L)
 
-        //THEN
+        // THEN
         Assert.assertEquals(user.get().id, 111L)
     }
 
     @Test(expected = EntityNotFoundException::class)
     fun `when finding user by id, user not found`() {
-        //WHEN
+        // WHEN
         userService.findUserByID(222L)
-
     }
 
     @Test
-    fun `when creating a user return user`(){
+    fun `when creating a user return user`() {
         val auxUser = userService.createUser(savedUser)
         Assert.assertEquals(auxUser, savedUser)
         Assert.assertEquals(auxUser.username, savedUser.username)
     }
 
     @Test(expected = EntityNotFoundException::class)
-    fun `when update user throw exception`(){
+    fun `when update user throw exception`() {
         userService.updateUser(User(222L, ""))
     }
 
     @Test
-    fun `when updating user return user `(){
+    fun `when updating user return user `() {
         val auxUser = userService.updateUser(User(111L, "updatedFound"))
         Assert.assertEquals(auxUser.username, "updatedFound")
     }

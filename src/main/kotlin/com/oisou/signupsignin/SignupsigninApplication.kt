@@ -7,5 +7,5 @@ import org.springframework.boot.runApplication
 class SignupsigninApplication
 
 fun main(args: Array<String>) {
-	runApplication<SignupsigninApplication>(*args)
+    runApplication<SignupsigninApplication>(*args)
 }

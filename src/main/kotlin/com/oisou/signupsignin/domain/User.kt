@@ -15,4 +15,5 @@ data class User(
     val id: Long,
 
     @Column(nullable = false)
-    var username: String)
+    var username: String
+)

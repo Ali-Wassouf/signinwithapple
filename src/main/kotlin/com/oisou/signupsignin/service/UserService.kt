@@ -12,8 +12,8 @@ class UserService constructor(private val userRepository: UserRepository) {
         return userRepository.findById(id)
     }
 
-    fun createUser(user: User) :User{
-       return userRepository.save(user)
+    fun createUser(user: User): User {
+        return userRepository.save(user)
     }
 
     fun deleteUserById(id: Long) {
