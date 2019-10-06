@@ -1,0 +1,66 @@
+yaml
+image: docker:19
+
+services:
+  - docker:19-dind
+
+stages:
+  - build
+  - release
+  - deploy 
+
+variables:
+  DOCKER_BUILDKIT: 1
+  ECS_CLUSTER_NAME: production
+  ECS_SERVICE_NAME: AppServer
+
+before_script:
+  - docker info
+  - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+
+build_image:
+  stage: build
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:latest || true
+    - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+
+release_latest:
+  variables:
+    GIT_STRATEGY: none
+  stage: release
+  only:
+    - master
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
+
+release_tag:
+  variables:
+    GIT_STRATEGY: none
+  stage: release
+  only:
+    - tags
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME
+
+deploy_moon:
+  variables:
+    GIT_STRATEGY: none
+  stage: deploy
+  environment: moon
+  when: manual
+  only:
+    - tags
+  script:
+    - >-
+      docker run fabfuel/ecs-deploy:1.9.0 ecs deploy $ECS_CLUSTER_NAME $ECS_SERVICE_NAME
+      --region $AWS_DEFAULT_REGION
+      --access-key-id $AWS_ACCESS_KEY_ID
+      --secret-access-key $AWS_SECRET_ACCESS_KEY
+      --tag $CI_COMMIT_REF_NAME
+      --timeout 600
+      --rollback
