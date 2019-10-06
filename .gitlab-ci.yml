@@ -1,8 +1,6 @@
-yaml
-image: docker:19
-
+image: docker:latest
 services:
-  - docker:19-dind
+  - docker:dind
 
 stages:
   - build
