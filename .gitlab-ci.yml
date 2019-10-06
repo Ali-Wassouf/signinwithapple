@@ -5,11 +5,11 @@ services:
 stages:
   - build
   - release
-  - deploy 
+  - deploy
 
 variables:
   DOCKER_BUILDKIT: 1
-  ECS_CLUSTER_NAME: production
+  ECS_CLUSTER_NAME: moon
   ECS_SERVICE_NAME: AppServer
 
 before_script:
