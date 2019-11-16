@@ -17,7 +17,7 @@ before_script:
   - docker info
   - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
 # Setup ssh connection to the server
-  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - 'which ssh-agent || ( apk update && apk add --no-progress openssh-client )'
   - eval $(ssh-agent -s)
   - cat "$EC2_INSTANCE_KEY" | tr -d '\r' | ssh-add -
   - mkdir -p ~/.ssh
