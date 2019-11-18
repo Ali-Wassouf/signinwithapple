@@ -10,11 +10,19 @@ stages:
 variables:
   DOCKER_BUILDKIT: 1
   ECS_CLUSTER_NAME: moon
-  ECS_SERVICE_NAME: AppServer
+  ECS_SERVICE_NAME: API
 
 before_script:
+# Login to the docker registry
   - docker info
   - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
+# Setup ssh connection to the server
+  - 'which ssh-agent || ( apk update && apk add --no-progress openssh-client )'
+  - eval $(ssh-agent -s)
+  - cat "$EC2_INSTANCE_KEY" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+  - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
 
 build_image:
   stage: build
@@ -54,11 +62,4 @@ deploy_moon:
   only:
     - tags
   script:
-    - >-
-      docker run fabfuel/ecs-deploy:1.9.0 ecs deploy $ECS_CLUSTER_NAME $ECS_SERVICE_NAME
-      --region $AWS_DEFAULT_REGION
-      --access-key-id $AWS_ACCESS_KEY_ID
-      --secret-access-key $AWS_SECRET_ACCESS_KEY
-      --tag $CI_COMMIT_REF_NAME
-      --timeout 600
-      --rollback
+    ssh -i "$EC2_INSTANCE_KEY" "ec2-user@${EC2_INSTANCE_IP}" "~/bin/deploy $CI_COMMIT_SHA"
