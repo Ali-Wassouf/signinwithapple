@@ -1,4 +1,5 @@
 package com.oisou.signupsignin.domain.enum
 
-class GenderEnum {
+enum class GenderEnum {
+    MALE,FEMALE,INTERSEX
 }
