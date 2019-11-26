@@ -62,4 +62,4 @@ deploy_moon:
   only:
     - tags
   script:
-    ssh -i "$EC2_INSTANCE_KEY" "ec2-user@${EC2_INSTANCE_IP}" "~/bin/deploy $CI_COMMIT_SHA"
+    ssh -i "$EC2_INSTANCE_KEY" "ec2-user@${EC2_INSTANCE_IP}" "~/bin/deploy ${CI_COMMIT_SHA}"
