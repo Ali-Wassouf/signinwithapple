@@ -4,6 +4,9 @@ import com.google.gson.Gson
 import com.oisou.applesignin.config.AppleAuthServerConfig
 import com.oisou.applesignin.model.AppleAuthKeysList
 import com.oisou.applesignin.model.AppleAuthPublicKey
+import com.oisou.applesignin.model.AppleAuthUserInfo
+import com.oisou.applesignin.model.AppleVerifyCredentialsResponse
+import io.jsonwebtoken.Jwts
 import org.apache.http.client.methods.HttpGet
 import org.apache.http.impl.client.HttpClientBuilder
 import org.apache.http.util.EntityUtils
@@ -18,10 +21,10 @@ import java.util.Base64
 
 @Service
 class AppleAuthService(
-    private val appleAuthServerConfig: AppleAuthServerConfig,
-    private val gson: Gson
+    private val appleAuthServerConfig: AppleAuthServerConfig
 ) {
-    fun getApplePublicKey(): AppleAuthKeysList {
+    fun getApplePublicKeyInfo(): AppleAuthKeysList {
+        val gson = Gson()
         val httpGet = HttpGet(appleAuthServerConfig.applePublicKeyUrl)
         httpGet.addHeader("Content-Type", "application/json")
 
@@ -46,5 +49,38 @@ class AppleAuthService(
 
         val spec = RSAPublicKeySpec(modulus, exponent)
         return factory.generatePublic(spec)
+    }
+
+    fun verifyCredentials(appleAuthUserInfo: AppleAuthUserInfo): AppleVerifyCredentialsResponse {
+
+        val appleVerifyCredentialsResponse = AppleVerifyCredentialsResponse(false, "")
+        val appleAuthPublicKeyList = try {
+            getApplePublicKeyInfo()
+        } catch (exception: Exception) {
+            appleVerifyCredentialsResponse.errorMessage = exception.message!!
+            null
+        }
+        if (appleAuthPublicKeyList == null) {
+            return appleVerifyCredentialsResponse
+        } else {
+            val appleAuthPublicKey = appleAuthPublicKeyList.keys[0]
+            val publicKey = getPublicKey(appleAuthPublicKey)
+            try {
+                val claims = Jwts.parser()
+                    .setSigningKey(publicKey)
+                    .parseClaimsJws(String(Base64.getDecoder().decode(appleAuthUserInfo.identityToken)))
+                    .body
+                if (claims.subject == appleAuthUserInfo.user) {
+                    appleVerifyCredentialsResponse.isValid = true
+                    appleVerifyCredentialsResponse.errorMessage = ""
+                    return appleVerifyCredentialsResponse
+                }
+            }catch(exception:Exception){
+                appleVerifyCredentialsResponse.isValid = false
+                appleVerifyCredentialsResponse.errorMessage = exception.message!!
+                return appleVerifyCredentialsResponse
+            }
+        }
+        return appleVerifyCredentialsResponse
     }
 }

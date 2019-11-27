@@ -1,3 +1,5 @@
 package com.oisou.applesignin.model
 
-data class AppleAuthKeysList(val keys: List<AppleAuthPublicKey>)
+class AppleAuthKeysList{
+    lateinit var keys: List<AppleAuthPublicKey>
+}
