@@ -1,11 +1,16 @@
 package com.oisou.applesignin.controller
 
+import com.oisou.applesignin.model.AppleAuthUserInfo
 import com.oisou.applesignin.service.AppleAuthService
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/v1/login")
+@RequestMapping("/api/v1/auth")
 class ThirdPartyLoginController(val appleAuthService: AppleAuthService){
-    //TODO write end point for apple auth
+
+    @PostMapping("/issue")
+    fun verifyCredentials(@RequestBody appleAuthUserInfo: AppleAuthUserInfo) = appleAuthService.verifyCredentials(appleAuthUserInfo)
 }
