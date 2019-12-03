@@ -7,17 +7,17 @@ import com.oisou.applesignin.model.AppleAuthPublicKey
 import com.oisou.applesignin.model.AppleAuthUserInfo
 import com.oisou.applesignin.model.AppleVerifyCredentialsResponse
 import io.jsonwebtoken.Jwts
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.impl.client.HttpClientBuilder
-import org.apache.http.util.EntityUtils
-import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.spec.InvalidKeySpecException
 import java.security.spec.RSAPublicKeySpec
 import java.util.Base64
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.util.EntityUtils
+import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Service
 
 @Service
 class AppleAuthService(
@@ -75,7 +75,7 @@ class AppleAuthService(
                     appleVerifyCredentialsResponse.errorMessage = ""
                     return appleVerifyCredentialsResponse
                 }
-            }catch(exception:Exception){
+            } catch (exception: Exception) {
                 appleVerifyCredentialsResponse.isValid = false
                 appleVerifyCredentialsResponse.errorMessage = exception.message!!
                 return appleVerifyCredentialsResponse

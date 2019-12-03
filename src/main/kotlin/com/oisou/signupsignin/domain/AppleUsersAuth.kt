@@ -2,9 +2,6 @@ package com.oisou.signupsignin.domain
 
 import com.oisou.signupsignin.domain.enum.StateEnum
 import com.vladmihalcea.hibernate.type.json.JsonBinaryType
-import org.hibernate.annotations.Type
-import org.hibernate.annotations.TypeDef
-import org.hibernate.annotations.TypeDefs
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -13,6 +10,9 @@ import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.Table
+import org.hibernate.annotations.Type
+import org.hibernate.annotations.TypeDef
+import org.hibernate.annotations.TypeDefs
 
 @Entity
 @Table(name = "apple_users_auth")

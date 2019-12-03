@@ -2,8 +2,8 @@ package com.oisou.signupsignin.service
 
 import com.oisou.signupsignin.dao.UserRepository
 import com.oisou.signupsignin.domain.User
-import org.springframework.stereotype.Service
 import java.util.Optional
+import org.springframework.stereotype.Service
 
 @Service
 class UserService constructor(private val userRepository: UserRepository) {

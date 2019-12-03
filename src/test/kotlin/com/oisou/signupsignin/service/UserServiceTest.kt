@@ -1,17 +1,17 @@
-//package com.oisou.signupsignin.service
+// package com.oisou.signupsignin.service
 //
-//import com.oisou.signupsignin.dao.UserRepository
-//import com.oisou.signupsignin.domain.User
-//import com.oisou.signupsignin.domain.enum.GenderEnum
-//import io.mockk.every
-//import io.mockk.mockk
-//import org.junit.Assert
-//import org.junit.Before
-//import org.junit.Test
-//import java.util.Optional
-//import javax.persistence.EntityNotFoundException
+// import com.oisou.signupsignin.dao.UserRepository
+// import com.oisou.signupsignin.domain.User
+// import com.oisou.signupsignin.domain.enum.GenderEnum
+// import io.mockk.every
+// import io.mockk.mockk
+// import org.junit.Assert
+// import org.junit.Before
+// import org.junit.Test
+// import java.util.Optional
+// import javax.persistence.EntityNotFoundException
 //
-//class UserServiceTest {
+// class UserServiceTest {
 //
 //    private val usersRepository = mockk<UserRepository>()
 //    private val userService = UserService(usersRepository)
@@ -61,4 +61,4 @@
 //        val auxUser = userService.updateUser(User(111L, "updatedFound",GenderEnum.FEMALE))
 //        Assert.assertEquals(auxUser.username, "updatedFound")
 //    }
-//}
+// }

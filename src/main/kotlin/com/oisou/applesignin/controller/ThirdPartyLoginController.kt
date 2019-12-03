@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/auth")
-class ThirdPartyLoginController(val appleAuthService: AppleAuthService){
+class ThirdPartyLoginController(val appleAuthService: AppleAuthService) {
 
     @PostMapping("/issue")
     fun verifyCredentials(@RequestBody appleAuthUserInfo: AppleAuthUserInfo) = appleAuthService.verifyCredentials(appleAuthUserInfo)

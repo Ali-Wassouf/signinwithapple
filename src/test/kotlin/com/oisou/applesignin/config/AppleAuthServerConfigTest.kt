@@ -17,7 +17,6 @@ class AppleAuthServerConfigTest {
     @Test
     fun testNotNullBean() {
         Assert.assertNotNull(appleAuthServerConfig)
-        Assert.assertEquals("https://www.something.com",appleAuthServerConfig.applePublicKeyUrl)
+        Assert.assertEquals("https://www.something.com", appleAuthServerConfig.applePublicKeyUrl)
     }
-
 }

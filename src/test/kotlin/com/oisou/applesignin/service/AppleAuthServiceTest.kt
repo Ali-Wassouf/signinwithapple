@@ -2,8 +2,6 @@ package com.oisou.applesignin.service
 
 import com.oisou.applesignin.config.AppleAuthServerConfig
 import com.oisou.applesignin.model.AppleAuthPublicKey
-import io.jsonwebtoken.JwtParser
-import io.jsonwebtoken.Jwts
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.Assert
@@ -11,13 +9,11 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import java.util.Base64
 
 @RunWith(MockitoJUnitRunner::class)
 class AppleAuthServiceTest {
 
     private val appleAuthServerConfig = mockk<AppleAuthServerConfig>()
-
 
     private val appleAuthService = AppleAuthService(appleAuthServerConfig)
 
