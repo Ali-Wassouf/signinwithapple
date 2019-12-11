@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="initialMigration-0.0.1" author="a.wassouf">
+        <sqlFile path="V1__init_users_table.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.1__update_user_table_add_new_props.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.3__create_device_table.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.4__create_apple_user_auth.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.5__create_location_table_and_link_it_to_user.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.6__alter_users_add_appleid_define_nullables.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.6.1__create_table_genders.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.6.2__drop_location_foreginkey_from_users.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.6.3__add_gender_foreignkey_to_users.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.6.4__add_location_as_point_to_users.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.6.5__alter_apple_auth_add_refreesh_token_define_nullables.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.6.6__updating_device_table.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+        <sqlFile path="V1.6.7__create_signup_feedback_table.sql" relativeToChangelogFile="true" splitStatements="false"
+                 stripComments="true" encoding="UTF-8" endDelimiter=";"/>
+    </changeSet>
+</databaseChangeLog>

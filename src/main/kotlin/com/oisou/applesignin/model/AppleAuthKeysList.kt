@@ -1,5 +1,8 @@
 package com.oisou.applesignin.model
 
-class AppleAuthKeysList{
+import springfox.documentation.annotations.ApiIgnore
+
+@ApiIgnore
+class AppleAuthKeysList {
     lateinit var keys: List<AppleAuthPublicKey>
 }

@@ -31,6 +31,11 @@
         <mockk.version>1.9</mockk.version>
         <wiremock.version>2.22.0</wiremock.version>
         <feign-version>9.3.1</feign-version>
+        <liquibase.sql.url>jdbc:postgresql://localhost:5432/master</liquibase.sql.url>
+        <liquibase.sql.username>moon_master</liquibase.sql.username>
+        <liquibase.sql.password>KY7pmhRLEHRHzX6LvqGQkkMi</liquibase.sql.password>
+        <liquibase.sql.changelogfile>src/main/resources/liquibase/changelog.xml</liquibase.sql.changelogfile>
+        <liquibase.sql.driver>org.postgresql.Driver</liquibase.sql.driver>
     </properties>
 
     <dependencies>
@@ -39,11 +44,7 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.flywaydb</groupId>
-            <artifactId>flyway-core</artifactId>
-            <version>5.2.1</version>
-        </dependency>
+
         <dependency>
             <groupId>io.mockk</groupId>
             <artifactId>mockk</artifactId>
@@ -143,6 +144,11 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.6.3</version>
+        </dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-jackson</artifactId>
             <version>0.10.7</version>
@@ -195,6 +201,33 @@
                 </dependencies>
             </plugin>
             <plugin>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-maven-plugin</artifactId>
+                <version>${liquibase.version}</version>
+                <configuration>
+                    <changeLogFile>${liquibase.sql.changelogfile}</changeLogFile>
+                    <driver>${liquibase.sql.driver}</driver>
+                    <url>${liquibase.sql.url}</url>
+                    <username>${liquibase.sql.username}</username>
+                    <password>${liquibase.sql.password}</password>
+                    <verbose>true</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>update</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
@@ -222,19 +255,6 @@
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
-            </plugin>
-            <plugin>
-                <groupId>org.flywaydb</groupId>
-                <artifactId>flyway-maven-plugin</artifactId>
-                <version>6.0.3</version>
-                <configuration>
-                    <url>jdbc:postgresql://localhost:5432/master</url>
-                    <user>moon_master</user>
-                    <password>KY7pmhRLEHRHzX6LvqGQkkMi</password>
-                    <schemas>
-                        <schema>public</schema>
-                    </schemas>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

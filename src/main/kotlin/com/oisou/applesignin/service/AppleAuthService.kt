@@ -4,7 +4,7 @@ import com.google.gson.Gson
 import com.oisou.applesignin.config.AppleAuthServerConfig
 import com.oisou.applesignin.model.AppleAuthKeysList
 import com.oisou.applesignin.model.AppleAuthPublicKey
-import com.oisou.applesignin.model.AppleAuthUserInfo
+import com.oisou.applesignin.model.AppleAuthCredentials
 import com.oisou.applesignin.model.AppleVerifyCredentialsResponse
 import io.jsonwebtoken.Jwts
 import org.apache.http.client.methods.HttpGet
@@ -51,7 +51,7 @@ class AppleAuthService(
         return factory.generatePublic(spec)
     }
 
-    fun verifyCredentials(appleAuthUserInfo: AppleAuthUserInfo): AppleVerifyCredentialsResponse {
+    fun verifyCredentials(appleAuthCredentials: AppleAuthCredentials): AppleVerifyCredentialsResponse {
 
         val appleVerifyCredentialsResponse = AppleVerifyCredentialsResponse(false, "")
         val appleAuthPublicKeyList = try {
@@ -68,9 +68,9 @@ class AppleAuthService(
             try {
                 val claims = Jwts.parser()
                     .setSigningKey(publicKey)
-                    .parseClaimsJws(String(Base64.getDecoder().decode(appleAuthUserInfo.identityToken)))
+                    .parseClaimsJws(String(Base64.getDecoder().decode(appleAuthCredentials.identityToken)))
                     .body
-                if (claims.subject == appleAuthUserInfo.user) {
+                if (claims.subject == appleAuthCredentials.user) {
                     appleVerifyCredentialsResponse.isValid = true
                     appleVerifyCredentialsResponse.errorMessage = ""
                     return appleVerifyCredentialsResponse
