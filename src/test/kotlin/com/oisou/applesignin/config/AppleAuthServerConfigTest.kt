@@ -1,5 +1,6 @@
 package com.oisou.applesignin.config
 
+import com.oisou.config.apple.AppleAuthServerConfig
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +18,6 @@ class AppleAuthServerConfigTest {
     @Test
     fun testNotNullBean() {
         Assert.assertNotNull(appleAuthServerConfig)
-        Assert.assertEquals("https://www.something.com",appleAuthServerConfig.applePublicKeyUrl)
+        Assert.assertEquals("https://www.something.com", appleAuthServerConfig.applePublicKeyUrl)
     }
-
 }
