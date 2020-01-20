@@ -3,8 +3,8 @@ services:
   - docker:dind
 
 stages:
-  - build
-  - release
+#  - build
+#  - release
   - deploy
 
 variables:
@@ -18,23 +18,23 @@ before_script:
   - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
 
 
-build_image:
-  stage: build
-  script:
-    # Build the docker image and use the latest release as a docker cache source
-    # https://testdriven.io/blog/faster-ci-builds-with-docker-cache/
-    - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+# build_image:
+#   stage: build
+#   script:
+#     # Build the docker image and use the latest release as a docker cache source
+#     # https://testdriven.io/blog/faster-ci-builds-with-docker-cache/
+#     - docker pull $CI_REGISTRY_IMAGE:latest || true
+#     - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+#     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
-release_latest:
-  stage: release
-  only:
-    - master
-  script:
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
-    - docker push $CI_REGISTRY_IMAGE:latest
+# release_latest:
+#   stage: release
+#   only:
+#     - master
+#   script:
+#     - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+#     - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
+#     - docker push $CI_REGISTRY_IMAGE:latest
 
 deploy_moon:
   stage: deploy
@@ -43,4 +43,6 @@ deploy_moon:
   script:
     - export SERVICE_NAME="$APLICATION_NAME-$CI_ENVIRONMENT_NAME"
     - export DOCKER_IMAGE="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
-    - ./deploy-srcipts/deploy.sh
+    - ls -al
+    - pwd
+    #- ./deploy-srcipts/deploy.sh
