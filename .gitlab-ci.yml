@@ -9,7 +9,6 @@ stages:
 
 variables:
   DOCKER_BUILDKIT: 1
-  GIT_STRATEGY: none
   AWS_REGION: eu-central-1
   APLICATION_NAME: api
 
@@ -21,33 +20,27 @@ before_script:
 
 build_image:
   stage: build
-  variables:
-    GIT_STRATEGY: fetch
   script:
     # Build the docker image and use the latest release as a docker cache source
     # https://testdriven.io/blog/faster-ci-builds-with-docker-cache/
     - docker pull $CI_REGISTRY_IMAGE:latest || true
-    - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - docker build --pull --cache-from $CI_REGISTRY_IMAGE:latest --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 release_latest:
   stage: release
   only:
     - master
   script:
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA $CI_REGISTRY_IMAGE:latest
     - docker push $CI_REGISTRY_IMAGE:latest
-
-release_tag:
-  stage: release
-  only:
-    - tags
-  script:
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 deploy_moon:
   stage: deploy
   environment: moon
+  variables:
+    GIT_STRATEGY: none
   when: manual
   only:
     - tags
