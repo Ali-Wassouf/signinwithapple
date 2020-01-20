@@ -45,5 +45,6 @@ deploy_moon:
     # - export DOCKER_IMAGE="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
     - export SERVICE_NAME="api-moon"
     - export DOCKER_IMAGE="nginx:latest"
+    - apk add jq
     - chmod +x ./deploy-srcipts/deploy.sh
     - ./deploy-srcipts/deploy.sh
