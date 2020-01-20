@@ -43,6 +43,4 @@ deploy_moon:
   script:
     - export SERVICE_NAME="$APLICATION_NAME-$CI_ENVIRONMENT_NAME"
     - export DOCKER_IMAGE="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
-    - ls -al
-    - pwd
-    #- ./deploy-srcipts/deploy.sh
+    - cat ./deploy-srcipts/deploy.sh
