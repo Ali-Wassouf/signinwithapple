@@ -21,6 +21,8 @@ before_script:
 
 build_image:
   stage: build
+  variables:
+    GIT_STRATEGY: fetch
   script:
     # Build the docker image and use the latest release as a docker cache source
     # https://testdriven.io/blog/faster-ci-builds-with-docker-cache/
