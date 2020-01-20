@@ -42,8 +42,6 @@ deploy_moon:
   variables:
     GIT_STRATEGY: none
   when: manual
-  only:
-    - tags
   script:
     - export SERVICE_NAME="$APLICATION_NAME-$CI_ENVIRONMENT_NAME"
     - export DOCKER_IMAGE="$CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA"
