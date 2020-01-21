@@ -20,10 +20,23 @@ import javax.servlet.http.HttpServletRequest
 @Component
 class JwtTokenProvider(val customUserDetailsService: CustomUserDetailsService, val securityConfigRepository: SecurityConfigRepository) {
 
-    fun createToken(username: String, role: Role): String {
+    fun createAccessToken(username: String, role: Role): Pair<String, Long> {
         val claims = Jwts.claims().setSubject(username)
         claims["auth"] = SimpleGrantedAuthority(role.authority)
 
+        val date = Date()
+        val validity = Date(date.time + securityConfigRepository.validityInMilliseconds)
+        val encryptedSecret = Base64.getEncoder().encodeToString(securityConfigRepository.secretKey.toByteArray())
+        val accessToken = Jwts.builder()
+            .setClaims(claims)
+            .setIssuedAt(date)
+            .setExpiration(validity)
+            .signWith(SignatureAlgorithm.HS256, encryptedSecret).compact()
+        return Pair(accessToken, validity.time)
+    }
+
+    fun createRefreshToken(username: String):String{
+        val claims = Jwts.claims().setSubject(username+"OisoURefresh")
         val date = Date()
         val validity = Date(date.time + securityConfigRepository.validityInMilliseconds)
         val encryptedSecret = Base64.getEncoder().encodeToString(securityConfigRepository.secretKey.toByteArray())

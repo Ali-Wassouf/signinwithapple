@@ -23,7 +23,7 @@ class ThirdPartyLoginController(private val appleAuthService: AppleAuthService, 
     @ApiOperation(value = "For now, this endpoint verifies if the sent information matches the information on the auth provider server", response =
     AppleVerifyCredentialsResponse::class)
     @PostMapping("/issue")
-    fun verifyCredentials(@RequestBody userAuthRequest: UserAuthRequest): ResponseEntity<String> {
+    fun verifyCredentials(@RequestBody userAuthRequest: UserAuthRequest): ResponseEntity<Any> {
         if (userAuthRequest.provider == ProviderEnum.APPLE) {
             //TODO
             // appleAuthService.verifyCredentials(userAuthRequest.appleCredentials)
@@ -43,7 +43,7 @@ class ThirdPartyLoginController(private val appleAuthService: AppleAuthService, 
                             //Sign them in
                         }
                         else -> {
-                            //sign them up
+                            return ResponseEntity(userService.signUserUp(userAuthRequest.appleCredentials), HttpStatus.OK)
                         }
 
                     }

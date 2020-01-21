@@ -24,7 +24,7 @@ data class User(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "auth_provider_user_id")
     var username: String,
 
     @Column(nullable = false)
@@ -60,13 +60,14 @@ data class User(
 
     @Column(nullable = false)
     var deleted: Boolean,
-    @Column(nullable = false)
+    @Column(nullable = false, name = "auth_provider_token")
     var password: String,
+
     @Enumerated(EnumType.STRING)
     @Column(name = "category_type")
     var role: Role?,
 
-    @Column(name ="gender" )
+    @Column(name = "gender")
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "gender", referencedColumnName = "id")
     var gender: Gender?,
@@ -74,7 +75,10 @@ data class User(
     @Column(name = "gender_of_interest")
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "gender_of_interest", referencedColumnName = "id")
-    var genderOfInterest : Gender?
+    var genderOfInterest: Gender?,
+
+    @Column(nullable = false)
+    var refreshToken: String
 ) {
     constructor() : this(-1,
         "DEFAULT",
@@ -90,5 +94,7 @@ data class User(
         null,
         false,
         "DEFAULT",
-        Role.ROLE_CLIENT, null, null)
+        Role.ROLE_CLIENT,
+        null,
+        null, "")
 }
