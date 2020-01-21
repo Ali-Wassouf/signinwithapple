@@ -17,7 +17,10 @@ class Swagger2Config {
     @Bean
     fun api(): Docket {
         return Docket(DocumentationType.SWAGGER_2).select()
-            .apis(RequestHandlerSelectors.basePackage("com.oisou")).paths(PathSelectors.regex("/.*")).build().apiInfo(apiEndPointsInfo())
+            .apis(RequestHandlerSelectors.basePackage("com.oisou"))
+            .paths(PathSelectors.regex("/.*"))
+            .build()
+            .apiInfo(apiEndPointsInfo())
     }
 
     private fun apiEndPointsInfo(): ApiInfo {

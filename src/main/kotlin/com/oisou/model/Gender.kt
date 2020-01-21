@@ -8,17 +8,11 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "locations")
-data class Location(
+@Table(name = "genders")
+data class Gender(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
-
-    @Column(nullable = false)
-    var latitude: Float,
-
-    @Column(nullable = false)
-    var longitude: Float
-){
-    constructor():this(-1L, 0.0F, 0.0F)
-}
+    @Column
+    val name: String
+)

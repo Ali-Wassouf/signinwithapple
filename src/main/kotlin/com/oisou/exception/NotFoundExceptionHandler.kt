@@ -12,16 +12,10 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
-class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
+class NotFoundExceptionHandler : ResponseEntityExceptionHandler() {
 
     @ExceptionHandler(ResourceNotFoundException::class)
     fun resourceNotFoundExceptionHandler(ex: ResourceNotFoundException, request: WebRequest): ResponseEntity<ErrorDetails> {
-        val errorDetails = ErrorDetails(Date(), ex.message!!, request.getDescription(false))
-        return ResponseEntity(errorDetails, HttpStatus.NOT_FOUND)
-    }
-
-    @ExceptionHandler(Exception::class)
-    fun globalExceptionHandler(ex: Exception, request: WebRequest): ResponseEntity<ErrorDetails> {
         val errorDetails = ErrorDetails(Date(), ex.message!!, request.getDescription(false))
         return ResponseEntity(errorDetails, HttpStatus.NOT_FOUND)
     }
