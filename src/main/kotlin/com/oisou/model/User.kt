@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 import javax.persistence.JoinColumn
-import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 import javax.persistence.Table
 
@@ -36,9 +35,9 @@ data class User(
     @Column(nullable = false)
     var appVersion: String,
 
-    @ManyToOne
-    @JoinColumn(name = "last_location", nullable = false)
-    var lastLocation: Location,
+//    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
+//    @JoinColumn(name = "last_location", nullable = false)
+//    var lastLocation: Location,
 
     @Column(nullable = false)
     var deviceId: String,
@@ -49,13 +48,13 @@ data class User(
     @Column(nullable = false)
     var dateRegistration: Date,
 
-    @Column(nullable = false)
-    var dateLastProfileUpdate: Timestamp,
+    @Column
+    var dateLastProfileUpdate: Timestamp?,
 
-    @Column(nullable = false)
-    var dateLastLogin: Timestamp,
+    @Column
+    var dateLastLogin: Timestamp?,
 
-    @Column(nullable = false)
+    @Column
     var dateDeletion: Date?,
 
     @Column(nullable = false)
@@ -64,37 +63,19 @@ data class User(
     var password: String,
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "category_type")
+    @Column(name = "role")
     var role: Role?,
 
-    @Column(name = "gender")
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "gender", referencedColumnName = "id")
     var gender: Gender?,
 
-    @Column(name = "gender_of_interest")
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "gender_of_interest", referencedColumnName = "id")
     var genderOfInterest: Gender?,
 
-    @Column(nullable = false)
-    var refreshToken: String
-) {
-    constructor() : this(-1,
-        "DEFAULT",
-        Date(1577836800L),
-        "DEFAULT",
-        "DEFAULT",
-        Location(),
-        "DEFAULT",
-        "DEFAULT",
-        Date(1577836800L),
-        Timestamp.valueOf("2020-01-01 00:00:00.00"),
-        Timestamp.valueOf("2020-01-01 00:00:00.00"),
-        null,
-        false,
-        "DEFAULT",
-        Role.ROLE_CLIENT,
-        null,
-        null, "")
-}
+    @OneToOne(cascade = [CascadeType.ALL])
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    var authKey: AuthKey
+
+)

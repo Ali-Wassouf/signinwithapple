@@ -1,9 +1,6 @@
 package com.oisou.service
 
-import com.oisou.datatransferobject.SignUpDTO
-import com.oisou.model.Role
 import com.oisou.model.User
-import com.oisou.model.apple.AppleAuthCredentials
 import com.oisou.repository.UserRepository
 import com.oisou.security.JwtTokenProvider
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -16,7 +13,7 @@ class UserService constructor(private val userRepository: UserRepository, privat
 
     fun createUser(user: User) = userRepository.save(user)
 
-    fun findByUserName(username: String) = userRepository.findByUsername(username)
+    fun findByUserName(username: String) = userRepository.findByUsername(username)!!
 
     fun deleteUserById(id: Long) = userRepository.deleteById(id)
 
@@ -26,16 +23,24 @@ class UserService constructor(private val userRepository: UserRepository, privat
         return userRepository.save(existingUser)
     }
 
-    fun isNewUser(username: String) = userRepository.existsByUsername(username)
+    fun isNewUser(username: String) = !userRepository.existsByUsername(username)
 
-    fun signUserUp(appleCredentials: AppleAuthCredentials): SignUpDTO {
-        var user = User()
-        user.password = passwordEncoder.encode(user.password)
+//TODO
+//    fun signUserUp(appleCredentials: AppleAuthCredentials): AuthResponseDTO {
+//        var user = User()
+//        user.password = passwordEncoder.encode(user.password)
+//
+//        val (accessToken, expiresIn) = jwtTokenProvider.createAccessToken(appleCredentials.user, Role.ROLE_CLIENT)
+//        val refreshToken = jwtTokenProvider.createRefreshToken(appleCredentials.user)
+//        user.refreshToken = refreshToken
+//        user = userRepository.save(user)
+//        return AuthResponseDTO(accessToken, expiresIn, refreshToken, true)
+//    }
 
-        val (accessToken, expiresIn) = jwtTokenProvider.createAccessToken(appleCredentials.user, Role.ROLE_CLIENT)
-        val refreshToken = jwtTokenProvider.createRefreshToken(appleCredentials.user)
-        user.refreshToken = refreshToken
-        user = userRepository.save(user)
-        return SignUpDTO(accessToken, user.id, expiresIn, refreshToken, true)
+    fun findRefreshToken() {
+        //TODO find refresh token for the user by user name and
+        // create an access token for the user
+        // return the same dto for the sign up sign in
+
     }
 }

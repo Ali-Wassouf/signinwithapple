@@ -38,6 +38,7 @@ class JwtTokenProvider(val customUserDetailsService: CustomUserDetailsService, v
     fun createRefreshToken(username: String):String{
         val claims = Jwts.claims().setSubject(username+"OisoURefresh")
         val date = Date()
+        //TODO make validity one year
         val validity = Date(date.time + securityConfigRepository.validityInMilliseconds)
         val encryptedSecret = Base64.getEncoder().encodeToString(securityConfigRepository.secretKey.toByteArray())
         return Jwts.builder()

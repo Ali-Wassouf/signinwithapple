@@ -4,6 +4,7 @@ import com.oisou.model.ProviderEnum
 import com.oisou.model.UserAuthRequest
 import com.oisou.model.apple.AppleVerifyCredentialsResponse
 import com.oisou.service.AppleAuthService
+import com.oisou.service.AuthKeysService
 import com.oisou.service.UserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -18,37 +19,34 @@ import org.springframework.web.bind.annotation.RestController
     "information on the auth provider")
 @RestController
 @RequestMapping("/api/v1/auth")
-class ThirdPartyLoginController(private val appleAuthService: AppleAuthService, private val userService: UserService) {
+class ThirdPartyLoginController(private val appleAuthService: AppleAuthService, private val authKeysService: AuthKeysService, private val userService: UserService) {
 
     @ApiOperation(value = "For now, this endpoint verifies if the sent information matches the information on the auth provider server", response =
     AppleVerifyCredentialsResponse::class)
     @PostMapping("/issue")
     fun verifyCredentials(@RequestBody userAuthRequest: UserAuthRequest): ResponseEntity<Any> {
         if (userAuthRequest.provider == ProviderEnum.APPLE) {
-            //TODO
-            // appleAuthService.verifyCredentials(userAuthRequest.appleCredentials)
-            // check validity and proceed
-            //check if user exists in our db
-            // if user new -> create a user with fixed fields and save it in db with an id
-            //
-            //
 
-            var validityResponse = appleAuthService.verifyCredentials(userAuthRequest.appleCredentials)
+            val validityResponse = appleAuthService.verifyCredentials(userAuthRequest.appleCredentials)
             return when (validityResponse.isValid) {
                 true -> {
-                    //if user exist sign them in
-                    //else sign them up
-                    when (userService.isNewUser(userAuthRequest.appleCredentials.user)) {
+                    return when (userService.isNewUser(userAuthRequest.appleCredentials.user)) {
                         true -> {
-                            //Sign them in
+                            ResponseEntity(authKeysService.createToken(userAuthRequest), HttpStatus.OK)
                         }
                         else -> {
-                            return ResponseEntity(userService.signUserUp(userAuthRequest.appleCredentials), HttpStatus.OK)
+                            //sign them in
+                            val user = userService.findByUserName(userAuthRequest.appleCredentials.user)
+                            return when (authKeysService.validateRefreshToken(user)) {
+                                true -> {
+                                    ResponseEntity(authKeysService.createSignInToken(user), HttpStatus.OK)
+                                }
+                                else -> {
+                                    ResponseEntity("", HttpStatus.BAD_REQUEST)
+                                }
+                            }
                         }
-
                     }
-
-                    ResponseEntity("Success", HttpStatus.OK)
                 }
                 else -> {
                     ResponseEntity(validityResponse.errorMessage, HttpStatus.BAD_REQUEST)

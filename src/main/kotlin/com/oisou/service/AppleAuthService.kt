@@ -2,22 +2,25 @@ package com.oisou.service
 
 import com.google.gson.Gson
 import com.oisou.config.apple.AppleAuthServerConfig
+import com.oisou.model.apple.AppleAuthCredentials
 import com.oisou.model.apple.AppleAuthKeysList
 import com.oisou.model.apple.AppleAuthPublicKey
-import com.oisou.model.apple.AppleAuthCredentials
 import com.oisou.model.apple.AppleVerifyCredentialsResponse
 import io.jsonwebtoken.Jwts
+import mu.KotlinLogging
+import org.apache.http.client.methods.HttpGet
+import org.apache.http.impl.client.HttpClientBuilder
+import org.apache.http.util.EntityUtils
+import org.springframework.http.HttpStatus
+import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.security.KeyFactory
 import java.security.PublicKey
 import java.security.spec.InvalidKeySpecException
 import java.security.spec.RSAPublicKeySpec
 import java.util.Base64
-import org.apache.http.client.methods.HttpGet
-import org.apache.http.impl.client.HttpClientBuilder
-import org.apache.http.util.EntityUtils
-import org.springframework.http.HttpStatus
-import org.springframework.stereotype.Service
+
+private val logger = KotlinLogging.logger {}
 
 @Service
 class AppleAuthService(
@@ -68,7 +71,7 @@ class AppleAuthService(
             try {
                 val claims = Jwts.parser()
                     .setSigningKey(publicKey)
-                    .parseClaimsJws(String(Base64.getDecoder().decode(appleAuthCredentials.identityToken)))
+                    .parseClaimsJws(appleAuthCredentials.identityToken)
                     .body
                 if (claims.subject == appleAuthCredentials.user) {
                     appleVerifyCredentialsResponse.isValid = true
@@ -76,6 +79,7 @@ class AppleAuthService(
                     return appleVerifyCredentialsResponse
                 }
             } catch (exception: Exception) {
+                logger.error { exception.message }
                 appleVerifyCredentialsResponse.isValid = false
                 appleVerifyCredentialsResponse.errorMessage = exception.message!!
                 return appleVerifyCredentialsResponse

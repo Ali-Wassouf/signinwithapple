@@ -1,0 +1,1 @@
+alter table users alter column last_location drop not null;
