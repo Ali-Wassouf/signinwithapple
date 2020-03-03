@@ -28,9 +28,9 @@ class WebSecurityConfig(private val jwtTokenProvider: JwtTokenProvider) : WebSec
 
         // Entry points
         http.authorizeRequests()//
-            .antMatchers("/users/signin").permitAll()//
+            .antMatchers("/users/v1/**").permitAll()//
             .antMatchers("/api/v1/auth/**").permitAll()//
-            .antMatchers("/users/signup").permitAll()//
+            .antMatchers("/api/users/signup").permitAll()//
             .antMatchers("/h2-console/**/**").permitAll()
             // Disallow everything else..
             .anyRequest().authenticated()

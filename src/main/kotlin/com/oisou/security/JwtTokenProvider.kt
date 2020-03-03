@@ -64,6 +64,12 @@ class JwtTokenProvider(val customUserDetailsService: CustomUserDetailsService, v
         } else null
     }
 
+    fun resolveToken(token :String): String {
+        return if (token.startsWith("Bearer ")) {
+            token.substring(7)
+        } else ""
+    }
+
     fun validateToken(token: String):Boolean{
         try {
             Jwts.parser().setSigningKey(securityConfigRepository.secretKey).parseClaimsJws(token)

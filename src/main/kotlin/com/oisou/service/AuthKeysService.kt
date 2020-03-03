@@ -8,6 +8,7 @@ import com.oisou.model.UserAuthRequest
 import com.oisou.repository.AuthKeyRepository
 import com.oisou.security.JwtTokenProvider
 import org.springframework.stereotype.Service
+import javax.persistence.EntityNotFoundException
 
 @Service
 class AuthKeysService(private var authKeyRepository: AuthKeyRepository,
@@ -26,7 +27,7 @@ class AuthKeysService(private var authKeyRepository: AuthKeyRepository,
 
     }
 
-    fun createSignInToken(user : User): AuthResponseDTO {
+    fun createSignInToken(user: User): AuthResponseDTO {
         val (accessToken, expiresIn) =
             jwtTokenProvider.createAccessToken(user.username, Role.ROLE_CLIENT)
         return AuthResponseDTO(accessToken, expiresIn, user.authKey.refreshToken, false)
@@ -40,5 +41,21 @@ class AuthKeysService(private var authKeyRepository: AuthKeyRepository,
         val authKey = authKeyRepository.getOne(id)
         authKey.isValid = false;
         authKeyRepository.save(authKey)
+    }
+
+    fun validateRefreshToken(token: String): Boolean {
+        val newToken = jwtTokenProvider.resolveToken(token)
+        val authKey = authKeyRepository.findByRefreshToken(newToken) ?: throw EntityNotFoundException("Token not found")
+        return when (authKey.isValid) {
+            true -> {
+                when (jwtTokenProvider.validateToken(newToken)) {
+                    true -> true
+                    else -> false
+                }
+            }
+            else -> {
+                false
+            }
+        }
     }
 }

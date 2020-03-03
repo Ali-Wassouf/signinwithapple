@@ -5,5 +5,6 @@ import org.springframework.context.annotation.Configuration
 
 @Configuration
 class AppleAuthServerConfig(
-    @Value("\${apple.auth.server.url}") val applePublicKeyUrl: String
+    @Value("\${apple.auth.server.url}")
+    val applePublicKeyUrl: String
 )

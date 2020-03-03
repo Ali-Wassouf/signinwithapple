@@ -11,7 +11,10 @@ class UserService constructor(private val userRepository: UserRepository, privat
 
     fun findUserByID(id: Long) = userRepository.findById(id)
 
-    fun createUser(user: User) = userRepository.save(user)
+    fun createUser(user: User): User {
+        user.password = passwordEncoder.encode(user.password)
+        return userRepository.save(user)
+    }
 
     fun findByUserName(username: String) = userRepository.findByUsername(username)!!
 

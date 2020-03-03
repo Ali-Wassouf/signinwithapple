@@ -76,6 +76,9 @@ data class User(
 
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "address_id", referencedColumnName = "id")
-    var authKey: AuthKey
+    var authKey: AuthKey,
+
+    @Column(name="name")
+    var name: String
 
 )
