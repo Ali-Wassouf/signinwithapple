@@ -129,6 +129,14 @@
             <artifactId>feign-slf4j</artifactId>
             <version>${feign-version}</version>
         </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.tartus</groupId>-->
+<!--            <artifactId>safita</artifactId>-->
+<!--            <version>1.0</version>-->
+<!--            <scope>system</scope>-->
+<!--            <systemPath>/Users/aliwassouf/Documents/Projects/safita/Tartus/com.tartus/1.0/com.tartus-1.0.jar</systemPath>-->
+
+<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>

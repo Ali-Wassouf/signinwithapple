@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="initialMigration-0.0.15" author="a.wassouf">
+        <sql>alter table users rename column date_registration to date_created;
+
+            alter table users alter column date_created set default now();
+
+            alter table users rename column date_last_profile_update to date_last_updated;
+
+            alter table users alter column date_last_updated set not null;
+
+            alter table users alter column date_last_updated set default now();
+
+            alter table users rename column date_deletion to date_deleted;
+
+            alter table system_auth_keys
+            add date_created timestamp default now() not null;
+
+            alter table system_auth_keys
+            add date_last_updated timestamp default now() not null;
+            alter table signup_feedback
+            add date_last_updated timestamp default now() not null;
+
+            alter table locations
+            add date_created timestamp default now() not null;
+
+            alter table locations
+            add date_last_updated timestamp default now() not null;
+            alter table genders
+            add description TEXT not null;
+
+            alter table genders
+            add enabled boolean default true;
+
+            alter table genders
+            add date_created timestamp default now() not null;
+
+            alter table genders
+            add date_last_updated timestamp default now() not null;
+
+            alter table devices rename column creation_date to date_created;
+
+            alter table devices alter column date_created set default now();
+
+            alter table devices
+            add date_last_updated timestamp default now() not null;
+            alter table apple_users_auth
+            add date_created timestamp default now() not null;
+
+            alter table apple_users_auth
+            add date_last_updated timestamp default now() not null;
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>

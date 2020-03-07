@@ -18,5 +18,11 @@
     <include file="mastermigration-0.0.10.xml" relativeToChangelogFile="true"/>
     <include file="mastermigration-0.0.11.xml" relativeToChangelogFile="true"/>
     <include file="mastermigration-0.0.12.xml" relativeToChangelogFile="true"/>
+    <include file="mastermigration-0.0.13.xml" relativeToChangelogFile="true"/>
+    <include file="mastermigration-0.0.14.xml" relativeToChangelogFile="true"/>
+    <include file="mastermigration-0.0.15.xml" relativeToChangelogFile="true"/>
+    <include file="mastermigration-0.0.16.xml" relativeToChangelogFile="true"/>
+    <include file="mastermigration-0.0.17.xml" relativeToChangelogFile="true"/>
+    <include file="mastermigration-0.0.18.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

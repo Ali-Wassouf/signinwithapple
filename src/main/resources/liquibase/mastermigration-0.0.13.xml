@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="initialMigration-0.0.13" author="a.wassouf">
+       <sql>
+           alter table users drop column device_id;
+
+           alter table users drop column apple_user_id;
+
+           alter table users rename column gender to gender_id;
+
+           alter table users alter column gender_id set not null;
+
+           alter table users rename column gender_of_interest to gender_of_interest_id;
+
+           alter table users alter column gender_of_interest_id set not null;
+
+           alter table users alter column last_location set not null;
+
+           alter table users alter column auth_provider_token set not null;
+
+           alter table users alter column role set not null;
+
+           alter table users alter column auth_keys_id type bigint using auth_keys_id::bigint;
+       </sql>
+    </changeSet>
+</databaseChangeLog>

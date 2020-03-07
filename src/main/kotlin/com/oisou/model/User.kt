@@ -42,6 +42,7 @@ data class User(
     @Column(nullable = false)
     var deviceId: String,
 
+    //todo delete
     @Column(nullable = false, name = "apple_user_id")
     var appleUserIdentifier: String,
 

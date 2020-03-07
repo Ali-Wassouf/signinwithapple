@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd">
+
+    <changeSet id="initialMigration-0.0.15" author="a.wassouf">
+        <sql>
+            alter table device rename to devices;
+
+            alter table devices
+            add device_physical_id varchar(200) not null;
+
+        </sql>
+    </changeSet>
+</databaseChangeLog>
