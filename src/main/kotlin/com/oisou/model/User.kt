@@ -1,5 +1,6 @@
 package com.oisou.model
 
+import com.vividsolutions.jts.geom.Point
 import org.hibernate.annotations.Where
 import java.sql.Timestamp
 import java.util.Date
@@ -35,28 +36,14 @@ data class User(
     @Column(nullable = false)
     var appVersion: String,
 
-//    @ManyToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
-//    @JoinColumn(name = "last_location", nullable = false)
-//    var lastLocation: Location,
-
-    @Column(nullable = false)
-    var deviceId: String,
-
-    //todo delete
-    @Column(nullable = false, name = "apple_user_id")
-    var appleUserIdentifier: String,
-
-    @Column(nullable = false)
-    var dateRegistration: Date,
-
-    @Column
-    var dateLastProfileUpdate: Timestamp?,
+    @Column(nullable = true)
+    var lastLocation: Point?,
 
     @Column
     var dateLastLogin: Timestamp?,
 
     @Column
-    var dateDeletion: Date?,
+    var dateDeleted: Timestamp?,
 
     @Column(nullable = false)
     var deleted: Boolean,
@@ -80,6 +67,10 @@ data class User(
     var authKey: AuthKey,
 
     @Column(name="name")
-    var name: String
+    var name: String,
+    @Column
+    val dateCreated: Timestamp,
+    @Column
+    val dateLastUpdated: Timestamp
 
 )

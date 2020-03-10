@@ -1,6 +1,5 @@
-package com.oisou;
+package com.oisou.utils;
 
-import com.oisou.repository.DbConfig;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

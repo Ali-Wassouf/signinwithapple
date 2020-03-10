@@ -1,13 +1,17 @@
 package com.oisou.service
 
 import com.oisou.model.User
+import com.oisou.repository.AuthKeyRepository
+import com.oisou.repository.GenderRepository
 import com.oisou.repository.UserRepository
 import com.oisou.security.JwtTokenProvider
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 
 @Service
-class UserService constructor(private val userRepository: UserRepository, private val passwordEncoder: PasswordEncoder, private val jwtTokenProvider: JwtTokenProvider) {
+class UserService constructor(private val userRepository: UserRepository, private val passwordEncoder: PasswordEncoder, private
+val jwtTokenProvider:
+JwtTokenProvider) {
 
     fun findUserByID(id: Long) = userRepository.findById(id)
 

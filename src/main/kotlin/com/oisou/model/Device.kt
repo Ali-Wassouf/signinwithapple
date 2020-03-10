@@ -42,5 +42,8 @@ data class Device(
     val pushNotification: Boolean,
 
     @Column(nullable = false)
-    val pushToken: String
+    val pushToken: String,
+
+    @Column(name = "device_physical_id")
+    val devicePhysicalId: String
 )

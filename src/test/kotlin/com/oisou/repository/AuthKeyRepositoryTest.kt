@@ -1,6 +1,6 @@
 package com.oisou.repository
 
-import com.oisou.EnableEmbeddedPostgres
+import com.oisou.utils.EnableEmbeddedPostgres
 import com.oisou.model.AuthKey
 import com.oisou.model.ProviderEnum
 import org.junit.Assert
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component
 import org.springframework.test.context.TestPropertySource
 import org.springframework.test.context.jdbc.Sql
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner
+import java.sql.Timestamp
 import java.util.Random
 
 @RunWith(SpringJUnit4ClassRunner::class)
@@ -24,7 +25,7 @@ class AuthKeyRepositoryTest {
 
     @Test
     fun `when saving an auth key, finding this key by token should return true`() {
-        authKeyRepository.save(AuthKey(Random().nextLong(), "sasa", ProviderEnum.APPLE, true))
+        authKeyRepository.save(AuthKey(Random().nextLong(), "sasa", ProviderEnum.APPLE, true, Timestamp(System.currentTimeMillis()), Timestamp(System.currentTimeMillis())))
         Assert.assertTrue(authKeyRepository.findByRefreshToken("sasa") != null)
 
     }

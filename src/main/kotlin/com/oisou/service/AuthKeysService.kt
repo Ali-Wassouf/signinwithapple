@@ -8,6 +8,7 @@ import com.oisou.model.UserAuthRequest
 import com.oisou.repository.AuthKeyRepository
 import com.oisou.security.JwtTokenProvider
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
 import javax.persistence.EntityNotFoundException
 
 @Service
@@ -20,7 +21,7 @@ class AuthKeysService(private var authKeyRepository: AuthKeyRepository,
             jwtTokenProvider.createAccessToken(appleCredentials.user, Role.ROLE_CLIENT)
         val refreshToken = jwtTokenProvider.createRefreshToken(appleCredentials.user)
 
-        val authKey = AuthKey(1, refreshToken, userAuthRequest.provider, true)
+        val authKey = AuthKey(1, refreshToken, userAuthRequest.provider, true, Timestamp(System.currentTimeMillis()), Timestamp(System.currentTimeMillis()))
         authKeyRepository.save(authKey)
 
         return AuthResponseDTO(accessToken, expiresIn, refreshToken, true)
@@ -43,18 +44,18 @@ class AuthKeysService(private var authKeyRepository: AuthKeyRepository,
         authKeyRepository.save(authKey)
     }
 
-    fun validateRefreshToken(token: String): Boolean {
+    fun validateRefreshToken(token: String): Pair<Boolean, AuthKey> {
         val newToken = jwtTokenProvider.resolveToken(token)
         val authKey = authKeyRepository.findByRefreshToken(newToken) ?: throw EntityNotFoundException("Token not found")
         return when (authKey.isValid) {
             true -> {
                 when (jwtTokenProvider.validateToken(newToken)) {
-                    true -> true
-                    else -> false
+                    true -> Pair(true, authKey)
+                    else -> Pair(false, authKey)
                 }
             }
             else -> {
-                false
+                Pair(false, authKey)
             }
         }
     }

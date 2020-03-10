@@ -1,5 +1,6 @@
 package com.oisou.model
 
+import java.sql.Timestamp
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -18,7 +19,11 @@ data class Location(
     var latitude: Float,
 
     @Column(nullable = false)
-    var longitude: Float
-){
-    constructor():this(-1L, 0.0F, 0.0F)
+    var longitude: Float,
+    @Column
+    val dateCreated: Timestamp,
+    @Column
+    val dateLastUpdated: Timestamp
+) {
+    constructor() : this(-1L, 0.0F, 0.0F, Timestamp(System.currentTimeMillis()), Timestamp(System.currentTimeMillis()))
 }

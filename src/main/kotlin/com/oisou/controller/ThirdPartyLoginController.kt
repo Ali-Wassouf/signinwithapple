@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+
 @Api(value = "Third party signup/signin handler", description = "This controller is responsible for verifying the third party user, i.e if the sent information matches the " +
     "information on the auth provider")
 @RestController

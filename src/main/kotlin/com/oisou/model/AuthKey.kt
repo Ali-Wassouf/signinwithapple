@@ -1,5 +1,6 @@
 package com.oisou.model
 
+import java.sql.Timestamp
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.EnumType
@@ -10,7 +11,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "auth_keys")
+@Table(name = "system_auth_keys")
 data class AuthKey(
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -24,7 +25,13 @@ data class AuthKey(
     var authProvider: ProviderEnum,
 
     @Column(name = "is_valid")
-    var isValid: Boolean?
+    var isValid: Boolean?,
+
+    @Column(name = "date_created")
+    var dateCreated: Timestamp,
+
+    @Column(name = "date_last_updated")
+    var dateLastUpdated: Timestamp
 
 )
 

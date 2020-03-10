@@ -1,4 +1,4 @@
-package com.oisou.repository
+package com.oisou.utils
 
 import de.flapdoodle.embed.process.runtime.Network
 import org.hibernate.cfg.AvailableSettings

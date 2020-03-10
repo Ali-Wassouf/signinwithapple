@@ -1,8 +1,11 @@
 package com.oisou.controller
 
 import com.oisou.controller.message.ErrorMessage
+import com.oisou.model.Role
 import com.oisou.model.User
+import com.oisou.model.payload.UserPayload
 import com.oisou.service.AuthKeysService
+import com.oisou.service.GenderService
 import com.oisou.service.UserService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -17,13 +20,11 @@ import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 import java.io.IOException
-import javax.servlet.http.HttpServletResponse
-
-
+import java.sql.Timestamp
 
 @RestController
 @RequestMapping("/users/v1")
-class UserController constructor(private val userService: UserService, private val authKeysService: AuthKeysService) {
+class UserController constructor(private val userService: UserService, private val genderService: GenderService, private val authKeysService: AuthKeysService) {
 
     @GetMapping("/{userId}")
     fun getDriverById(@PathVariable userId: Long): ResponseEntity<User> {
@@ -45,11 +46,18 @@ class UserController constructor(private val userService: UserService, private v
     }
 
     @PostMapping("/create")
-    fun createUser(/*@RequestBody user: User,*/
+    fun createUser(@RequestBody user: UserPayload,
                    @RequestHeader(name = "Auth") authorization: String): ResponseEntity<Any> {
-        return when (authKeysService.validateRefreshToken(authorization)) {
+        val validatePair = authKeysService.validateRefreshToken(authorization)
+
+        return when (validatePair.first) {
             true -> {
-                //val userNew = userService.createUser(user)
+                val gender = genderService.findGender(user.genderId)
+                val genderOfInterest = genderService.findGender(user.genderOfInterestId)
+                val newUser = User(1L, user.authProviderId, user.dateOfBirth, user.countryCode, user.appVersion,null, Timestamp(System.currentTimeMillis()), null,
+                    false, user.authProviderToken, Role.ROLE_CLIENT, gender, genderOfInterest, validatePair.second, user.name, Timestamp(System.currentTimeMillis()),
+                    Timestamp(System.currentTimeMillis()))
+                userService.createUser(newUser)
                 ResponseEntity("", HttpStatus.OK)
             }
             else -> {
@@ -60,7 +68,7 @@ class UserController constructor(private val userService: UserService, private v
 
     @ExceptionHandler(Exception::class)
     @Throws(IOException::class)
-    fun springHandleNotFound(ex:Exception):ResponseEntity<ErrorMessage> {
+    fun springHandleNotFound(ex: Exception): ResponseEntity<ErrorMessage> {
         return ResponseEntity(ErrorMessage(ex.message!!), HttpStatus.INTERNAL_SERVER_ERROR)
     }
 
