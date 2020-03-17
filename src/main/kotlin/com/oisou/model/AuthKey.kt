@@ -14,7 +14,7 @@ import javax.persistence.Table
 @Table(name = "system_auth_keys")
 data class AuthKey(
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long,
 
     @Column(name = "refresh_token", nullable = false)

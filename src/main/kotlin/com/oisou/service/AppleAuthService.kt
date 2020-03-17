@@ -27,6 +27,7 @@ class AppleAuthService(
     private val appleAuthServerConfig: AppleAuthServerConfig
 ) {
     fun getApplePublicKeyInfo(): AppleAuthKeysList {
+        logger.info { "Getting Apple public key" }
         val gson = Gson()
         val httpGet = HttpGet(appleAuthServerConfig.applePublicKeyUrl)
         httpGet.addHeader("Content-Type", "application/json")
@@ -34,6 +35,7 @@ class AppleAuthService(
         val httpClient = HttpClientBuilder.create().build()
 
         val httpResponse = httpClient.execute(httpGet)!!
+        logger.info { "Response received from apple" }
         if (httpResponse.statusLine.statusCode != HttpStatus.OK.value()) {
             throw Exception("Apple api response status code is $httpResponse.statusLine.statusCode")
         }
@@ -55,7 +57,7 @@ class AppleAuthService(
     }
 
     fun verifyCredentials(appleAuthCredentials: AppleAuthCredentials): AppleVerifyCredentialsResponse {
-
+        logger.info { "Verifying credentials for user ${appleAuthCredentials.user} and token ${appleAuthCredentials.identityToken}" }
         val appleVerifyCredentialsResponse = AppleVerifyCredentialsResponse(false, "")
         val appleAuthPublicKeyList = try {
             getApplePublicKeyInfo()

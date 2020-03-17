@@ -2,6 +2,8 @@ package com.oisou.model
 
 import com.vividsolutions.jts.geom.Point
 import org.hibernate.annotations.Where
+import org.hibernate.envers.Audited
+import org.hibernate.envers.RelationTargetAuditMode
 import java.sql.Timestamp
 import java.util.Date
 import javax.persistence.CascadeType
@@ -63,7 +65,7 @@ data class User(
     var genderOfInterest: Gender?,
 
     @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    @JoinColumn(name = "auth_keys_id", referencedColumnName = "id")
     var authKey: AuthKey,
 
     @Column(name="name")

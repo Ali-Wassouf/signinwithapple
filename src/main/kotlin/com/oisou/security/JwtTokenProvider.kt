@@ -7,45 +7,49 @@ import com.oisou.service.CustomUserDetailsService
 import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
+import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.stereotype.Component
-import java.lang.RuntimeException
-import java.util.Base64
 import java.util.Date
 import javax.servlet.http.HttpServletRequest
+
+private val logger = KotlinLogging.logger {}
 
 @Component
 class JwtTokenProvider(val customUserDetailsService: CustomUserDetailsService, val securityConfigRepository: SecurityConfigRepository) {
 
     fun createAccessToken(username: String, role: Role): Pair<String, Long> {
+        logger.info { "Creating access token in system" }
         val claims = Jwts.claims().setSubject(username)
         claims["auth"] = SimpleGrantedAuthority(role.authority)
 
         val date = Date()
         val validity = Date(date.time + securityConfigRepository.validityInMilliseconds)
-        val encryptedSecret = Base64.getEncoder().encodeToString(securityConfigRepository.secretKey.toByteArray())
         val accessToken = Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(date)
             .setExpiration(validity)
-            .signWith(SignatureAlgorithm.HS256, encryptedSecret).compact()
+            .signWith(SignatureAlgorithm.HS256, securityConfigRepository.secretKey).compact()
+        logger.info { "Created access token $accessToken" }
         return Pair(accessToken, validity.time)
     }
 
-    fun createRefreshToken(username: String):String{
-        val claims = Jwts.claims().setSubject(username+"OisoURefresh")
+    fun createRefreshToken(username: String): String {
+        logger.info { "Creating refresh token " }
+        val claims = Jwts.claims().setSubject(username + "OisoURefresh")
         val date = Date()
         //TODO make validity one year
-        val validity = Date(date.time + securityConfigRepository.validityInMilliseconds)
-        val encryptedSecret = Base64.getEncoder().encodeToString(securityConfigRepository.secretKey.toByteArray())
-        return Jwts.builder()
+        val validity = Date(date.time + Long.MAX_VALUE)
+        val refreshToken = Jwts.builder()
             .setClaims(claims)
             .setIssuedAt(date)
             .setExpiration(validity)
-            .signWith(SignatureAlgorithm.HS256, encryptedSecret).compact()
+            .signWith(SignatureAlgorithm.HS256, securityConfigRepository.secretKey).compact()
+        logger.info { "Created refresh token $refreshToken" }
+        return refreshToken
     }
 
     fun getAuthentication(token: String): Authentication {
@@ -64,19 +68,15 @@ class JwtTokenProvider(val customUserDetailsService: CustomUserDetailsService, v
         } else null
     }
 
-    fun resolveToken(token :String): String {
-        return if (token.startsWith("Bearer ")) {
-            token.substring(7)
-        } else ""
-    }
-
-    fun validateToken(token: String):Boolean{
+    fun validateToken(token: String): Boolean {
         try {
             Jwts.parser().setSigningKey(securityConfigRepository.secretKey).parseClaimsJws(token)
             return true
         } catch (e: JwtException) {
+            logger.error { "JWTEXC ${e.stackTrace}" }
             throw TokenValidationException("Expired or invalid JWT token", HttpStatus.INTERNAL_SERVER_ERROR)
         } catch (e: IllegalArgumentException) {
+            logger.info { "Illegal argument $e" }
             throw TokenValidationException("Expired or invalid JWT token", HttpStatus.INTERNAL_SERVER_ERROR)
         }
 

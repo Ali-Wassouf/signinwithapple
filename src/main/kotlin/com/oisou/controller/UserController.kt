@@ -7,6 +7,7 @@ import com.oisou.model.payload.UserPayload
 import com.oisou.service.AuthKeysService
 import com.oisou.service.GenderService
 import com.oisou.service.UserService
+import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -22,8 +23,10 @@ import org.springframework.web.bind.annotation.RestController
 import java.io.IOException
 import java.sql.Timestamp
 
+private val logger = KotlinLogging.logger {}
+
 @RestController
-@RequestMapping("/users/v1")
+@RequestMapping("/api/v1/users")
 class UserController constructor(private val userService: UserService, private val genderService: GenderService, private val authKeysService: AuthKeysService) {
 
     @GetMapping("/{userId}")
@@ -50,6 +53,7 @@ class UserController constructor(private val userService: UserService, private v
                    @RequestHeader(name = "Auth") authorization: String): ResponseEntity<Any> {
         val validatePair = authKeysService.validateRefreshToken(authorization)
 
+        logger.info { "Creating user using provider userId ${user.authProviderId}" }
         return when (validatePair.first) {
             true -> {
                 val gender = genderService.findGender(user.genderId)

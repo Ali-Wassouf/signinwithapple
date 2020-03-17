@@ -8,6 +8,7 @@ import com.oisou.service.AuthKeysService
 import com.oisou.service.UserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
+import mu.KotlinLogging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
+private val logger = KotlinLogging.logger {}
 
 @Api(value = "Third party signup/signin handler", description = "This controller is responsible for verifying the third party user, i.e if the sent information matches the " +
     "information on the auth provider")
@@ -26,6 +28,7 @@ class ThirdPartyLoginController(private val appleAuthService: AppleAuthService, 
     AppleVerifyCredentialsResponse::class)
     @PostMapping("/issue")
     fun verifyCredentials(@RequestBody userAuthRequest: UserAuthRequest): ResponseEntity<Any> {
+       logger.info { "Issuing token for user with user ${userAuthRequest.appleCredentials.user} and identity token ${userAuthRequest.appleCredentials.user}"}
         if (userAuthRequest.provider == ProviderEnum.APPLE) {
 
             val validityResponse = appleAuthService.verifyCredentials(userAuthRequest.appleCredentials)
@@ -33,6 +36,7 @@ class ThirdPartyLoginController(private val appleAuthService: AppleAuthService, 
                 true -> {
                     return when (userService.isNewUser(userAuthRequest.appleCredentials.user)) {
                         true -> {
+                            logger.info { "New user, creating user in system" }
                             ResponseEntity(authKeysService.createToken(userAuthRequest), HttpStatus.OK)
                         }
                         else -> {

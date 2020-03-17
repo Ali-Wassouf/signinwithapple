@@ -7,21 +7,26 @@ import com.oisou.model.User
 import com.oisou.model.UserAuthRequest
 import com.oisou.repository.AuthKeyRepository
 import com.oisou.security.JwtTokenProvider
+import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
 import javax.persistence.EntityNotFoundException
+
+private val logger = KotlinLogging.logger {}
 
 @Service
 class AuthKeysService(private var authKeyRepository: AuthKeyRepository,
                       private val jwtTokenProvider: JwtTokenProvider) {
 
     fun createToken(userAuthRequest: UserAuthRequest): AuthResponseDTO {
+        logger.info { "Creating user ${userAuthRequest.appleCredentials.user} and token ${userAuthRequest.appleCredentials.identityToken}" }
         val appleCredentials = userAuthRequest.appleCredentials
         val (accessToken, expiresIn) =
             jwtTokenProvider.createAccessToken(appleCredentials.user, Role.ROLE_CLIENT)
         val refreshToken = jwtTokenProvider.createRefreshToken(appleCredentials.user)
 
-        val authKey = AuthKey(1, refreshToken, userAuthRequest.provider, true, Timestamp(System.currentTimeMillis()), Timestamp(System.currentTimeMillis()))
+        val authKey = AuthKey(1L, refreshToken, userAuthRequest.provider, true, Timestamp(System.currentTimeMillis()), Timestamp(System.currentTimeMillis()))
+        logger.info { " Created auth keys $authKey " }
         authKeyRepository.save(authKey)
 
         return AuthResponseDTO(accessToken, expiresIn, refreshToken, true)
@@ -45,13 +50,21 @@ class AuthKeysService(private var authKeyRepository: AuthKeyRepository,
     }
 
     fun validateRefreshToken(token: String): Pair<Boolean, AuthKey> {
-        val newToken = jwtTokenProvider.resolveToken(token)
-        val authKey = authKeyRepository.findByRefreshToken(newToken) ?: throw EntityNotFoundException("Token not found")
+        logger.info { "Validating refresh token $token" }
+        val authKey = authKeyRepository.findByRefreshToken(token) ?: throw EntityNotFoundException("Token not found")
+        logger.info { "Refresh token is found" }
         return when (authKey.isValid) {
             true -> {
-                when (jwtTokenProvider.validateToken(newToken)) {
-                    true -> Pair(true, authKey)
-                    else -> Pair(false, authKey)
+                logger.info { "Token is valid" }
+                when (jwtTokenProvider.validateToken(token)) {
+                    true -> {
+                        logger.info { "Token parsed successfully" }
+                        Pair(true, authKey)
+                    }
+                    else -> {
+                        logger.info { "Parsing token failed" }
+                        Pair(false, authKey)
+                    }
                 }
             }
             else -> {

@@ -6,6 +6,6 @@ import org.springframework.stereotype.Component
 @Component
 @ConfigurationProperties(prefix = "security.jwt.token")
 class SecurityConfigRepository {
-    var secretKey = ""
-    var validityInMilliseconds = 0L
+    var secretKey = "AliMOJOMat"
+    var validityInMilliseconds = 3580L
 }
