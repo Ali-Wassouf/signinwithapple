@@ -24,6 +24,6 @@
     <include file="mastermigration-0.0.16.xml" relativeToChangelogFile="true"/>
     <include file="mastermigration-0.0.17.xml" relativeToChangelogFile="true"/>
     <include file="mastermigration-0.0.18.xml" relativeToChangelogFile="true"/>
-    <include file="mastermigration-0.0.19.xml" relativeToChangelogFile="true"/>
+    
 
 </databaseChangeLog>

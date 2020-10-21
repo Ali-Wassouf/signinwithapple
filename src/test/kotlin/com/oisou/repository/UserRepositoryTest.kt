@@ -1,6 +1,6 @@
 package com.oisou.repository
 
-import com.oisou.utils.EnableEmbeddedPostgres
+//import com.oisou.utils.EnableEmbeddedPostgres
 import com.oisou.model.AuthKey
 import com.oisou.model.Gender
 import com.oisou.model.ProviderEnum
@@ -20,7 +20,6 @@ import java.util.Date
 import kotlin.random.Random
 
 @RunWith(SpringJUnit4ClassRunner::class)
-@EnableEmbeddedPostgres
 @Component
 @TestPropertySource(locations = ["classpath:application-test.properties"])
 class UserRepositoryTest {
