@@ -1,5 +1,6 @@
 package com.oisou.service
 
+import com.oisou.datatransferobject.AuthResponseDTO
 import com.oisou.model.User
 import com.oisou.repository.AuthKeyRepository
 import com.oisou.repository.GenderRepository
@@ -10,8 +11,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class UserService constructor(private val userRepository: UserRepository, private val passwordEncoder: PasswordEncoder, private
-val jwtTokenProvider:
-JwtTokenProvider) {
+val jwtTokenProvider:  JwtTokenProvider) {
 
     fun findUserByID(id: Long) = userRepository.findById(id)
 
@@ -43,7 +43,6 @@ JwtTokenProvider) {
 //        user = userRepository.save(user)
 //        return AuthResponseDTO(accessToken, expiresIn, refreshToken, true)
 //    }
-
     fun findRefreshToken() {
         //TODO find refresh token for the user by user name and
         // create an access token for the user
